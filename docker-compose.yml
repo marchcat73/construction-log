@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: docker.io/library/postgres:16
+    container_name: postgres-costruct
+    environment:
+      POSTGRES_USER: dev_user
+      POSTGRES_PASSWORD: dev_password
+      POSTGRES_DB: dev_costruct_db
+    ports:
+      - "5432:5432"
+    volumes:
+      # Сохраняем данные базы в локальную директорию, чтобы они не пропали после удаления контейнера
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
