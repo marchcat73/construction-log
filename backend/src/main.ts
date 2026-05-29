@@ -6,8 +6,15 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Глобальная валидация
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+  // 🔥 Валидация и автопреобразование типов из запросов
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+      forbidNonWhitelisted: true,
+      transformOptions: { enableImplicitConversion: true },
+    }),
+  );
 
   // CORS для Next.js
   app.enableCors({
