@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import { DrizzleModule } from './db/drizzle.module';
 import { LogsModule } from './constlogs/constlogs.module';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -13,6 +12,6 @@ import { AppService } from './app.service';
     LogsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [],
 })
 export class AppModule {}
