@@ -1,5 +1,4 @@
 'use client';
-import { useState } from 'react';
 import cn from 'classnames';
 import useSWR from 'swr';
 import toast from 'react-hot-toast';
@@ -10,8 +9,8 @@ import { HomePageProps } from './HomePage.props';
 import styles from './HomePage.module.css';
 
 const HomePage = ({ className, ...props }: HomePageProps) => {
-  const { openModal } = useUiStore();
-  const [sort, setSort] = useState<'asc' | 'desc'>('desc');
+  const { openModal, sort, setSort } = useUiStore();
+  // const [sort, setSort] = useState<'asc' | 'desc'>('desc');
   const {
     data: logs,
     isLoading,
@@ -61,7 +60,7 @@ const HomePage = ({ className, ...props }: HomePageProps) => {
                 {new Date(log.workDate).toLocaleDateString('ru-RU')}
               </div>
               <div className={styles.info}>
-                <strong>{log.workTypeName || 'Без вида'}</strong>
+                <strong>{log.workType || 'Без вида'}</strong>
                 <span>{log.volume}</span>
               </div>
               <div className={styles.worker}>👷 {log.workerName}</div>

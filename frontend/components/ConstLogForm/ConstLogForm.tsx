@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import cn from 'classnames';
 import toast from 'react-hot-toast';
 import { useSWRConfig } from 'swr';
@@ -23,7 +22,7 @@ const PREDEFINED_WORK_TYPES = [
 ];
 
 const ConstLogForm = ({ className, ...props }: ConstLogFormProps) => {
-  const { isModalOpen, editingLog, closeModal } = useUiStore();
+  const { isModalOpen, editingLog, closeModal, sort } = useUiStore();
   const { mutate } = useSWRConfig();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -34,14 +33,35 @@ const ConstLogForm = ({ className, ...props }: ConstLogFormProps) => {
     setValue,
     reset,
   } = useForm<LogFormValues>({
+    mode: 'onChange',
     resolver: zodResolver(logSchema),
-    defaultValues: (editingLog && editingLog) || {
+    defaultValues: (editingLog && { ...editingLog }) || {
       workDate: new Date().toISOString().split('T')[0],
       workerName: '',
       workType: '',
       volume: '',
     },
   });
+
+  useEffect(() => {
+    if (editingLog && editingLog.workType) {
+      setValue('workType', editingLog.workType, {
+        shouldValidate: true,
+      });
+    }
+  }, [editingLog, editingLog?.workType, setValue]);
+
+  useEffect(() => {
+    if (editingLog && editingLog.workerName) {
+      setValue('workerName', editingLog.workerName, { shouldValidate: true });
+    }
+  }, [editingLog, editingLog?.workerName, setValue]);
+
+  useEffect(() => {
+    if (editingLog && editingLog.volume) {
+      setValue('volume', editingLog.volume, { shouldValidate: true });
+    }
+  }, [editingLog, editingLog?.volume, setValue]);
 
   const onSubmit = async (data: LogFormValues) => {
     setIsSubmitting(true);
@@ -58,7 +78,7 @@ const ConstLogForm = ({ className, ...props }: ConstLogFormProps) => {
       if (!res.ok) throw new Error('Ошибка сервера');
 
       toast.success(editingLog ? 'Запись обновлена' : 'Запись добавлена');
-      await mutate('/logs', null, {
+      await mutate(`/logs?sort=${sort}`, null, {
         rollbackOnError: true,
         populateCache: true,
         revalidate: true,
@@ -146,7 +166,14 @@ const ConstLogForm = ({ className, ...props }: ConstLogFormProps) => {
         </label>
 
         <div className={styles.actions}>
-          <button type="button" onClick={closeModal} disabled={isSubmitting}>
+          <button
+            type="button"
+            onClick={() => {
+              reset();
+              closeModal();
+            }}
+            disabled={isSubmitting}
+          >
             Отмена
           </button>
           <button type="submit" disabled={isSubmitting}>

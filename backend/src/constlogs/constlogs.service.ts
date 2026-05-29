@@ -49,7 +49,7 @@ export class LogsService {
       .select({
         id: logs.id,
         workDate: logs.workDate,
-        workTypeName: workTypes.name,
+        workType: workTypes.name,
         volume: logs.volume,
         workerName: workers.fullName,
         workerId: workers.id,

@@ -7,11 +7,24 @@ type UiStore = {
   editingLog: LogFormValues | null;
   openModal: (log?: LogFormValues) => void;
   closeModal: () => void;
+  sort: 'asc' | 'desc';
+  setSort: (value: 'asc' | 'desc') => void;
 };
 
 export const useUiStore = create<UiStore>((set) => ({
   isModalOpen: false,
   editingLog: null,
-  openModal: (log) => set({ isModalOpen: true, editingLog: log }),
-  closeModal: () => set({ isModalOpen: false, editingLog: null }),
+  sort: 'desc',
+  openModal: (log) => {
+    set((state) => ({ ...state, isModalOpen: true, editingLog: log }));
+  },
+  closeModal: () => {
+    set((state) => ({ ...state, isModalOpen: false, editingLog: null }));
+  },
+  setSort: (value) => {
+    set((state) => ({
+      ...state,
+      sort: value,
+    }));
+  },
 }));
