@@ -5,6 +5,7 @@ import useSWR from 'swr';
 import toast from 'react-hot-toast';
 import { fetcher, API_URL } from '@/lib/api';
 import { useUiStore } from '@/stores';
+import { ConstLogForm } from '@/components';
 import { HomePageProps } from './HomePage.props';
 import styles from './HomePage.module.css';
 
@@ -80,6 +81,7 @@ const HomePage = ({ className, ...props }: HomePageProps) => {
           )}
         </ul>
       )}
+      <ConstLogForm />
     </main>
   );
 };
